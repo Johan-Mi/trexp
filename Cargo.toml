@@ -1,0 +1,13 @@
+[package]
+name = "trexp"
+version = "0.1.0"
+edition = "2021"
+description = "Utilities for transforming expression trees"
+license = "WTFPL"
+repository = "https://github.com/Johan-Mi/trexp"
+keywords = ["utility", "data-structures"]
+categories = ["data-structures"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
