@@ -15,3 +15,16 @@ impl<T> Bind<Self> for T {
         f(wrapped)
     }
 }
+
+/// [`and_then`] is the monadic bind for [`Result`].
+///
+/// [`and_then`]: std::result::Result::and_then
+/// [`Result`]: std::result::Result
+impl<T, E> Bind<Result<Self, E>> for T {
+    fn bind_mut(
+        wrapped: Result<Self, E>,
+        f: impl FnMut(Self) -> Result<Self, E>,
+    ) -> Result<Self, E> {
+        wrapped.and_then(f)
+    }
+}
