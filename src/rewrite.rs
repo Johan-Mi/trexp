@@ -137,6 +137,22 @@ impl<T> Rewrite<T> {
         }
     }
 
+    /// A version of [`repeat`] that takes a fallible function.
+    ///
+    /// [`repeat`]: Rewrite::repeat
+    pub fn try_repeat<E>(
+        initial: T,
+        mut f: impl FnMut(T) -> Result<Self, E>,
+    ) -> Result<Self, E> {
+        let mut val = Clean(initial);
+        loop {
+            match val.map(&mut f).transpose_result()?.transpose() {
+                Clean(done) => break Ok(done),
+                Dirty(keep_going) => val = Dirty(keep_going.into_inner()),
+            }
+        }
+    }
+
     /// Applies a function and makes the result [`Dirty`] if `self` was already
     /// dirty or became dirty as a result of the function.
     ///
@@ -203,6 +219,16 @@ impl<T> Rewrite<Rewrite<T>> {
         match self {
             Clean(inner) => inner.map(Clean),
             Dirty(inner) => inner.map(Dirty),
+        }
+    }
+}
+
+impl<T, E> Rewrite<Result<T, E>> {
+    /// Converts `Rewrite<Result<T, E>>` into `Result<Rewrite<T, E>>`.
+    pub fn transpose_result(self) -> Result<Rewrite<T>, E> {
+        match self {
+            Clean(t) => Ok(Clean(t?)),
+            Dirty(t) => Ok(Dirty(t?)),
         }
     }
 }
