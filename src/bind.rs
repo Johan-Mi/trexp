@@ -1,3 +1,5 @@
+use crate::Rewrite;
+
 /// Trait for types that support a monad-like bind operation.
 ///
 /// `FS` is the type of `Self` wrapped in some effect.
@@ -26,5 +28,18 @@ impl<T, E> Bind<Result<Self, E>> for T {
         f: impl FnMut(Self) -> Result<Self, E>,
     ) -> Result<Self, E> {
         wrapped.and_then(f)
+    }
+}
+
+/// The effect stack consisting of both [`Result`] and [`Rewrite`].
+///
+/// [`Result`]: std::result::Result
+/// [`Rewrite`]: crate::Rewrite
+impl<T, E> Bind<Result<Rewrite<Self>, E>> for T {
+    fn bind_mut(
+        wrapped: Result<Rewrite<Self>, E>,
+        f: impl FnMut(Self) -> Result<Rewrite<Self>, E>,
+    ) -> Result<Rewrite<Self>, E> {
+        wrapped?.try_bind(f)
     }
 }
