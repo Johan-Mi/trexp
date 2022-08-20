@@ -157,7 +157,7 @@ impl<T> Rewrite<T> {
     /// dirty or became dirty as a result of the function.
     ///
     /// [`Dirty`]: Rewrite::Dirty
-    pub fn bind(self, f: impl FnOnce(T) -> Self) -> Self {
+    pub fn bind<U>(self, f: impl FnOnce(T) -> Rewrite<U>) -> Rewrite<U> {
         match self {
             Clean(clean) => f(clean),
             Dirty(dirty) => Dirty(f(dirty).into_inner()),
@@ -167,10 +167,10 @@ impl<T> Rewrite<T> {
     /// A version of [`bind`] that takes a fallible function.
     ///
     /// [`bind`]: Rewrite::bind
-    pub fn try_bind<E>(
+    pub fn try_bind<E, U>(
         self,
-        f: impl FnOnce(T) -> Result<Self, E>,
-    ) -> Result<Self, E> {
+        f: impl FnOnce(T) -> Result<Rewrite<U>, E>,
+    ) -> Result<Rewrite<U>, E> {
         match self {
             Clean(t) => f(t),
             Dirty(t) => Ok(Dirty(f(t)?.into_inner())),
