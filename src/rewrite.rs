@@ -182,6 +182,7 @@ impl<T> Rewrite<&T> {
     /// Creates a new [`Rewrite`] by copying the inner value.
     ///
     /// [`Rewrite`]: Rewrite
+    #[must_use]
     pub const fn copied(self) -> Rewrite<T>
     where
         T: Copy,
@@ -215,6 +216,7 @@ impl<T> Rewrite<Rewrite<T>> {
     /// assert_eq!(Dirty(Clean(42)), Clean(Dirty(42)).transpose());
     /// assert_eq!(Clean(Dirty(42)), Dirty(Clean(42)).transpose());
     /// ```
+    #[must_use]
     pub fn transpose(self) -> Self {
         match self {
             Clean(inner) => inner.map(Clean),
