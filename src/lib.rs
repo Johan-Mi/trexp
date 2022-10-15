@@ -1,4 +1,4 @@
-#![deny(unsafe_code)]
+#![forbid(unsafe_code)]
 #![warn(clippy::cargo)]
 #![warn(clippy::missing_const_for_fn)]
 
