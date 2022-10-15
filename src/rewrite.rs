@@ -1,7 +1,7 @@
 pub use Rewrite::{Clean, Dirty};
 
 use crate::Bind;
-use std::ops::{Deref, DerefMut};
+use core::ops::{Deref, DerefMut};
 
 /// Enum representing a value that has passed through a transformation that may
 /// or may not have affected it.

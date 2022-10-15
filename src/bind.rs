@@ -6,7 +6,7 @@ use crate::Rewrite;
 pub trait Bind<FS>: Sized {
     /// Binds an effectful [`FnMut`] to an already wrapped value.
     ///
-    /// [`FnMut`]: std::ops::FnMut
+    /// [`FnMut`]: core::ops::FnMut
     fn bind_mut(wrapped: FS, f: impl FnMut(Self) -> FS) -> FS;
 }
 
@@ -20,8 +20,8 @@ impl<T> Bind<Self> for T {
 
 /// [`and_then`] is the monadic bind for [`Result`].
 ///
-/// [`and_then`]: std::result::Result::and_then
-/// [`Result`]: std::result::Result
+/// [`and_then`]: core::result::Result::and_then
+/// [`Result`]: core::result::Result
 impl<T, E> Bind<Result<Self, E>> for T {
     fn bind_mut(
         wrapped: Result<Self, E>,
@@ -33,7 +33,7 @@ impl<T, E> Bind<Result<Self, E>> for T {
 
 /// The effect stack consisting of both [`Result`] and [`Rewrite`].
 ///
-/// [`Result`]: std::result::Result
+/// [`Result`]: core::result::Result
 /// [`Rewrite`]: crate::Rewrite
 impl<T, E> Bind<Result<Rewrite<Self>, E>> for T {
     fn bind_mut(
